@@ -22,7 +22,6 @@ void readFreq(float given[], char fname[]) {
   fclose(in);
 }
 
-//Read the encoded text from an input file and accumulate the letter frequency store in found
 void calcFreq(float found[], char fname[]) {
   FILE* in;
   char c;
@@ -34,9 +33,6 @@ void calcFreq(float found[], char fname[]) {
     exit(-1);
   }
   while ((c = fgetc(in)) != EOF) {
-    //DO IT
-    //First check if C is a char
-    //Next check if it is uppercase or lowercase and react accordingly
     if (isalpha(c)) {
       if (c >= 'a' && c <= 'z') {
 	found[c - 'a']++;
@@ -48,11 +44,10 @@ void calcFreq(float found[], char fname[]) {
       }
     }
   }
-  //Need another loop to go through and determine freqs
   for (int i = 0; i < 26; i++) {
     found[i] = (found[i]/count);
   }
-  
+
   printf("%f   %d\n", found[0], count);
   printf("%f   %d\n", found[25], count);
   
@@ -60,8 +55,10 @@ void calcFreq(float found[], char fname[]) {
 }
 
 char rotate(char ch, int num) {
-
-  return 'a';
+  if (islower(ch))
+    return ((((ch - 'a') + num) % 26) + 'a');
+  else
+    return ((((ch - 'A') + num) % 26) + 'A');
 }
 
 int findKey(float given[], float found[]) {
@@ -74,7 +71,12 @@ void decrypt(int key, char fname[]) {
 }
 
 int main() {
-  //  readFreq(given_freqs, "LetFreq.txt");
+  // Take command line arguments for input and output files
+  readFreq(given_freqs, "LetFreq.txt");
   calcFreq(calc_freqs, "lol.txt");
+  char s = rotate('z', 2);
+  printf("%c\n", s);
+  s = rotate('A', 2);
+  printf("%c\n", s);
   return 0;
 }
