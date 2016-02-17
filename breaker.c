@@ -48,8 +48,8 @@ void calcFreq(float found[], char fname[]) {
     found[i] = (found[i]/count);
   }
 
-  printf("%f   %d\n", found[0], count);
-  printf("%f   %d\n", found[25], count);
+  //printf("%f   %d\n", found[0], count);
+  //printf("%f   %d\n", found[25], count);
   
   fclose(in);
 }
@@ -60,7 +60,7 @@ char rotate(char ch, int num) {
   else
     return ((((ch - 'A') + num) % 26) + 'A');
 }
-
+/*
 void rotate_one(float arr[], int n) {
   int j, i;
   j = arr[0];
@@ -68,25 +68,81 @@ void rotate_one(float arr[], int n) {
     arr[i] = arr[i+1];
   arr[i] = j;
 }
-
+*/
+float diff_two_squares(float a, float b) {
+  float x = a - b;
+  return x * x;
+}
+/*
 void rotate_arr(float arr[], int d, int size) {
   for (int i = 0; i < d; i++)
     rotate_one(arr, size);
 }
+*/
+
+void rotate_one(float a[], int n) {
+  int i, temp;
+  temp = a[0];
+  for (i = 0; i < n-1; i++)
+    a[i] = a[i+1];
+  a[i] = temp;
+}
+
+void rotate_arr(float a[], int n, int d) {
+  int i;
+  for (i = 0; i < d; i++)
+    rotate_one(a, n);
+}
+
+int find_least(float arr[], int size) {
+  int f;
+  float temp;
+  for (int i = 0; i < size; i++) {
+    if (arr[i] < temp) {
+      temp = arr[i];
+      f = i;
+    }
+  }
+  return f;
+}
 
 int findKey(float given[], float found[]) {
-
-  
-
-  return 0;
+  float f;
+  float diffs[26];
+  for (int x = 0; x <26; x++) {
+    rotate_arr(found, 26, x);
+    printf("%f\n", found[0]);
+    f = 0;
+    for (int y = 0; y <26; y++) {
+      f += diff_two_squares(given[y], found[y]);
+    }
+    diffs[x] = f;
+    //printf("%f\n", f);
+  }
+  return find_least(diffs, 26);
+  printf("Key... %d\n", find_least(diffs, 26));
 }
 
-void decrypt(int key, char fname[]) {
+void decrypt(int key, char in_name[], char out_name[]) {
+  FILE *in, *out;
+  char ch;
+  in = fopen(in_name, "r");
+  out = fopen(out_name, "w");
+  if (in == NULL || out == NULL) {
+    printf("Error opening file.\n");
+    exit(-1);
+  }
+  while (fscanf(in, "%c", &ch) != EOF) {
+    fprintf(out, "%c", rotate(ch, key));
+  }
 
+  fclose(in);
+  fclose(out);
 }
 
-int main() {
+int main(int argc, char * argv[]) {
   // Take command line arguments for input and output files
+  /*
   readFreq(given_freqs, "LetFreq.txt");
   calcFreq(calc_freqs, "lol.txt");
   printf("%f\n", calc_freqs[0]);
@@ -100,24 +156,18 @@ int main() {
   printf("%c\n", s);
   */
 
-  FILE *in, *out;
-  /*
+  int key;
+
   if (argc != 3) {
     printf("Please specify an input file (encrypted) and desired output file.\n");
     exit(1);
   }
 
-  in = fopen(argv[1], "r");
-  out = fopen(argv[2], "w");
-
-  if (in == NULL || out == NULL) {
-    printf("Error opening file!"\n);
-    exit(1);
-  }
-
-  */
-
-  // Call find key and decrypt on input here
+  readFreq(given_freqs, "LetFreq.txt");
+  calcFreq(calc_freqs, argv[1]);
+  key = findKey(given_freqs, calc_freqs);
+  printf("%d\n", key);
+  decrypt(key, argv[1], argv[2]);
 
   return 0;
 }
