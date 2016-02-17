@@ -61,7 +61,22 @@ char rotate(char ch, int num) {
     return ((((ch - 'A') + num) % 26) + 'A');
 }
 
+void rotate_one(float arr[], int n) {
+  int j, i;
+  j = arr[0];
+  for (i = 0; i < n-1; i++)
+    arr[i] = arr[i+1];
+  arr[i] = j;
+}
+
+void rotate_arr(float arr[], int d, int size) {
+  for (int i = 0; i < d; i++)
+    rotate_one(arr, size);
+}
+
 int findKey(float given[], float found[]) {
+
+  
 
   return 0;
 }
@@ -74,9 +89,35 @@ int main() {
   // Take command line arguments for input and output files
   readFreq(given_freqs, "LetFreq.txt");
   calcFreq(calc_freqs, "lol.txt");
-  char s = rotate('z', 2);
+  printf("%f\n", calc_freqs[0]);
+  printf("%f\n", calc_freqs[1]);
+  rotate_arr(calc_freqs, 1, 26);
+  printf("%f\n", calc_freqs[0]);
+  printf("%f\n", calc_freqs[1]);
+  /*char s = rotate('z', 2);
   printf("%c\n", s);
   s = rotate('A', 2);
   printf("%c\n", s);
+  */
+
+  FILE *in, *out;
+  /*
+  if (argc != 3) {
+    printf("Please specify an input file (encrypted) and desired output file.\n");
+    exit(1);
+  }
+
+  in = fopen(argv[1], "r");
+  out = fopen(argv[2], "w");
+
+  if (in == NULL || out == NULL) {
+    printf("Error opening file!"\n);
+    exit(1);
+  }
+
+  */
+
+  // Call find key and decrypt on input here
+
   return 0;
 }
