@@ -1,3 +1,9 @@
+/***********************************
+* Automatic Casesar Cipher Breaker *
+* CIS 361 -- Winter 2016           *
+* Author: Michael Kolarik          *
+***********************************/
+
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -47,9 +53,6 @@ void calcFreq(float found[], char fname[]) {
   for (int i = 0; i < 26; i++) {
     found[i] = (found[i]/count);
   }
-
-  //printf("%f   %d\n", found[0], count);
-  //printf("%f   %d\n", found[25], count);
   
   fclose(in);
 }
@@ -60,25 +63,11 @@ char rotate(char ch, int num) {
   else
     return ((((ch - 'A') + num) % 26) + 'A');
 }
-/*
-void rotate_one(float arr[], int n) {
-  int j, i;
-  j = arr[0];
-  for (i = 0; i < n-1; i++)
-    arr[i] = arr[i+1];
-  arr[i] = j;
-}
-*/
+
 float diff_two_squares(float a, float b) {
   float x = a - b;
   return x * x;
 }
-/*
-void rotate_arr(float arr[], int d, int size) {
-  for (int i = 0; i < d; i++)
-    rotate_one(arr, size);
-}
-*/
 
 void rotate_one(float a[], int n) {
   int i, temp;
@@ -111,16 +100,13 @@ int findKey(float given[], float found[]) {
   float diffs[26];
   for (int x = 0; x <26; x++) {
     rotate_arr(found, 26, x);
-    printf("%f\n", found[0]);
     f = 0;
     for (int y = 0; y <26; y++) {
       f += diff_two_squares(given[y], found[y]);
     }
     diffs[x] = f;
-    //printf("%f\n", f);
   }
   return find_least(diffs, 26);
-  printf("Key... %d\n", find_least(diffs, 26));
 }
 
 void decrypt(int key, char in_name[], char out_name[]) {
@@ -132,6 +118,7 @@ void decrypt(int key, char in_name[], char out_name[]) {
     printf("Error opening file.\n");
     exit(-1);
   }
+
   while (fscanf(in, "%c", &ch) != EOF) {
     fprintf(out, "%c", rotate(ch, key));
   }
@@ -141,23 +128,8 @@ void decrypt(int key, char in_name[], char out_name[]) {
 }
 
 int main(int argc, char * argv[]) {
-  // Take command line arguments for input and output files
-  /*
-  readFreq(given_freqs, "LetFreq.txt");
-  calcFreq(calc_freqs, "lol.txt");
-  printf("%f\n", calc_freqs[0]);
-  printf("%f\n", calc_freqs[1]);
-  rotate_arr(calc_freqs, 1, 26);
-  printf("%f\n", calc_freqs[0]);
-  printf("%f\n", calc_freqs[1]);
-  char s = rotate('z', 2);
-  printf("%c\n", s);
-  s = rotate('A', 2);
-  printf("%c\n", s);
-  */
-
   int key;
-
+  
   if (argc != 3) {
     printf("Please specify an input file (encrypted) and desired output file.\n");
     exit(1);
@@ -166,7 +138,6 @@ int main(int argc, char * argv[]) {
   readFreq(given_freqs, "LetFreq.txt");
   calcFreq(calc_freqs, argv[1]);
   key = findKey(given_freqs, calc_freqs);
-  printf("%d\n", key);
   decrypt(key, argv[1], argv[2]);
 
   return 0;
