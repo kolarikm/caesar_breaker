@@ -150,7 +150,7 @@ int main(int argc, char * argv[]) {
   rotate_arr(calc_freqs, 1, 26);
   printf("%f\n", calc_freqs[0]);
   printf("%f\n", calc_freqs[1]);
-  /*char s = rotate('z', 2);
+  char s = rotate('z', 2);
   printf("%c\n", s);
   s = rotate('A', 2);
   printf("%c\n", s);
